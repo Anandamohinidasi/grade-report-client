@@ -5,6 +5,9 @@
        v-model="searchQuery" 
        :placeholder="placeholder"
        @keypress="search">
+<a class="downloadButton" v-if="selected && searchQuery"
+:href="getDownloadUrl()">
+Download</a>
 <ul class="suggestion-list" v-if="searchQuery">
   <li v-for="suggestion in suggestionList" 
       :key="suggestion._id"
@@ -25,12 +28,17 @@ export default {
   data() {
     return {
       searchQuery: '',
-      suggestionList: []
+      selected: '',
+      suggestionList: [],
     }
   },
   methods: {
+    getDownloadUrl() {
+      return `http://localhost:8080/reports/${this.searchQuery}/${this.selected}`
+    },
     select(suggestion) {
       this.searchQuery = suggestion.name;
+      this.selected = suggestion._id;
     },
     search() {
       if(this.searchQuery === '') return;
@@ -59,6 +67,14 @@ export default {
       &:focus {
         box-shadow: 0 0 5px rgba(81, 203, 238, 1);
       }
+  }
+  .downloadButton {
+    border: 1px solid #d4dde5;
+    padding: 1em;
+    border-radius: 0 6px 6px 0;
+    border-left: none;
+    position: absolute;
+    right: -6em;
   }
   ul.suggestion-list {
     border: 1px solid #d4dde5;
